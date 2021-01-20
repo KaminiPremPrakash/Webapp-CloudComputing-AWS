@@ -1,0 +1,90 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install wget zip unzip python2.7 python-pip -y
+
+      - name: Install curl & npm
+        run: |
+          sudo apt install curl -y
+          curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+          sudo apt install nodejs -y
+          node --version
+          npm  --version
+
+      - name: Install npm modules
+        run: |
+          pwd
+          ls
+          npm install
+
+      - name: Run test
+        run: npm test
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Build Artifact
+        run: npm build
+
+      - name: Clean node modules
+        run: sudo rm -r node_modules
+
+      - name: Zip artifact
+        run: |
+          echo "current build number is ${{ github.run_number }}"
+          pwd
+          cd ..
+          mkdir -p codedeploy_artifact
+          pwd
+          cd codedeploy_artifact
+          pwd
+          zip -r csye6225-web-app-${{ github.run_number }}.zip ../webapp .
+          ls -al
+          pwd
+          cd ..
+          pwd
+          ls -al
+          cd codedeploy_artifact
+          pwd
+          ls -al
+
+      - name: Upload Artifact to S3
+        run: |
+          pwd
+          ls -al
+          cd ..
+          cd codedeploy_artifact
+          aws configure list
+          aws s3 cp csye6225-web-app-${{ github.run_number }}.zip s3://${{ secrets.CODE_DEPLOY_BUCKET }} --sse
+
+      - name: Make CodeDeploy API call
+        run: aws deploy create-deployment --output json --application-name csye6225-webapp --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name csye6225-webapp-deployment --s3-location bucket=${{ secrets.CODE_DEPLOY_BUCKET }},bundleType=zip,key=csye6225-web-app-${{ github.run_number }}.zip

@@ -1,0 +1,25 @@
+name: Run packer build on a template file
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  packer_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - run: curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip
+      - run: unzip awscliv2.zip
+      - run: sudo ./aws/install
+      - run: curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      - run: sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      - run: sudo apt-get update && sudo apt-get install packer
+      - run: packer validate -var-file=vars.json ami.json
+      - run: packer build -var-file=vars.json ami.json
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
