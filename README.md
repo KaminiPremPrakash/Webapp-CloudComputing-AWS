@@ -118,11 +118,11 @@ NUID : 001388352
 [Serverless Lambda Code Repository](https://github.com/KaminiPremPrakash/Webapp-CloudComputing-AWS/tree/main/serverless)
 
 * Implemented pub/sub mechanism with SNS and Lambda function
-* user requesting for his due bills, puts a message onto the AWS SQS service
+* user answering, updating or deleting a question, puts a message onto the AWS SQS service
 * SQS-Consumer in the application checks already existing entry for user in Dynamodb
 * If no email has sent already, SQS consumer process the request and puts the response in SNS 
 * Once message is published to SNS Topic, subscribed lambda function is trigged 
-* Lambda delivers due bills email to requesting user and saves the entry in Dynamo DB with TTL of 60 minutes
+* Lambda delivers emails to user when any question posted by them is answered, updated, or deleted and saves the entry in Dynamo DB with TTL of 60 minutes
 
 # webapp
 
