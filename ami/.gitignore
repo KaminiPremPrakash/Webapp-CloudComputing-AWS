@@ -1,0 +1,10 @@
+# Cache objects
+packer_cache/
+
+# For built boxes
+*.box
+
+# Crash log
+crash.log
+
+.idea
