@@ -1,0 +1,9 @@
+{
+  "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+  "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+  "aws_region": "{{env `AWS_DEFAULT_REGION`}}",
+  "ssh_username": "ubuntu",
+  "source_ami": "ami-0817d428a6fb68645",
+  "subnet_id": "",
+  "prod_account": "496305015117"
+}
