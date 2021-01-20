@@ -32,7 +32,7 @@ NUID : 001388352
 
 ## Deploying a web application on AWS-EC2
 
-[Web Application Code Repository]()
+[Web Application Code Repository](https://github.com/KaminiPremPrakash/Webapp-CloudComputing-AWS/tree/main/webapp)
 
 **Application Use Cases:**
 
@@ -86,7 +86,7 @@ NUID : 001388352
 
 ## Infrastructure - Terraform
 
-[Infrastructure Repository]()
+[Infrastructure Repository](https://github.com/KaminiPremPrakash/Webapp-CloudComputing-AWS/tree/main/infrastructure)
 
 * created custom VPC with network setup using terraform (Infrastructure as code)
 * Attached Load balancers, auto scaling groups, SES, SQS and SNS services
@@ -95,7 +95,7 @@ NUID : 001388352
 
 ## CI/CD Pipeline - AMI - Hashicorp Packer
 
-[HashiCorp Packer Code Repository]()
+[HashiCorp Packer Code Repository](https://github.com/KaminiPremPrakash/Webapp-CloudComputing-AWS/tree/main/ami)
 
 * Built custom AMI using Hashicorp packer
 * Created AMI template to share the image between multiple AWS accounts within organization
@@ -115,7 +115,7 @@ NUID : 001388352
 
 ## Serverless Computing - Lambda 
 
-[Serverless Lambda Code Repository]()
+[Serverless Lambda Code Repository](https://github.com/KaminiPremPrakash/Webapp-CloudComputing-AWS/tree/main/serverless)
 
 * Implemented pub/sub mechanism with SNS and Lambda function
 * user requesting for his due bills, puts a message onto the AWS SQS service
@@ -123,8 +123,6 @@ NUID : 001388352
 * If no email has sent already, SQS consumer process the request and puts the response in SNS 
 * Once message is published to SNS Topic, subscribed lambda function is trigged 
 * Lambda delivers due bills email to requesting user and saves the entry in Dynamo DB with TTL of 60 minutes
-
-![](Serverless.png)
 
 # webapp
 
